@@ -137,7 +137,7 @@ inline void StandardSurface::onEvent(Event *e)
     case Event::PointerMove:
         if (m_renderer && m_renderer->sceneRoot()) {
             PointerEvent *pe = PointerEvent::from(e);
-            if (m_pointerEventReceiver) {
+            if (m_pointerEventReceiver && m_pointerEventReceiver->isPointerTarget()) {
                 bool inv = false;
                 mat4 invNodeMatrix = TransformNode::matrixFor(m_pointerEventReceiver, m_renderer->sceneRoot()).inverted(&inv);
                 if (inv)
