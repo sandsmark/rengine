@@ -234,6 +234,10 @@ void tst_rect2d()
     check_equal(r.width(), 4);
     check_equal(r.height(), 8);
 
+    r = rect2d::fromPosSize(vec2(1, 2), vec2(0, 0));
+    check_true(!r.contains(vec2(1, 2)));
+    check_true(!r.contains(vec2(0, 0)));
+
     cout << __PRETTY_FUNCTION__ << ": ok" << endl;
 }
 
