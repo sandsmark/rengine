@@ -149,7 +149,11 @@ void RootWindow::closeExample()
 
 void RootWindow::exampleClosed()
 {
-    assert(m_example);
+    if (!m_example) {
+        cout << "example already closed" << endl;
+        return;
+    }
+
     setPointerEventReceiver(nullptr);
     m_appLayer->remove(m_example);
     m_appLayer->remove(m_closeButton);
