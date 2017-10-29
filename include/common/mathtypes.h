@@ -597,8 +597,8 @@ public:
     bool operator==(rect2d o) const { return tl == o.tl && br == o.br; }
 
     bool contains(vec2 p) const {
-        assert(tl.x < br.x);
-        assert(tl.y < br.y);
+        assert(tl.x <= br.x);
+        assert(tl.y <= br.y);
         return p.x >= tl.x && p.x <= br.x
             && p.y >= tl.y && p.y <= br.y;
     }
