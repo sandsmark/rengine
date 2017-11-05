@@ -3,7 +3,7 @@ project(rengine)
 
 file(MAKE_DIRECTORY lib)
 
-set(CMAKE_CXX_FLAGS "-Wall -std=c++11")
+set(CMAKE_CXX_FLAGS "-Wall -std=c++11 -fsanitize=address -fsanitize=undefined")
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY lib)
 
 if(UNIX AND NOT APPLE)
