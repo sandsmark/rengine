@@ -77,7 +77,7 @@ Node *RootWindow::build()
     root->append(m_appLayer);
 
     // The close button..
-    SignalHandler_Function<> *handler = new SignalHandler_Function<>([this] () { closeExample(); });
+    SignalHandler_Function<>::Ptr handler = SignalHandler<>::function([this] () { closeExample(); });
     m_buttonSignalHandlers.push_back(handler);
     m_closeButton = createTextButton("Close", units);
     m_closeButton->setGeometry(rect2d::fromXywh(m_buttonGrid->margin(), m_buttonGrid->margin(),
@@ -180,7 +180,7 @@ void RootWindow::add(Example *example, const Units &units)
 {
     example->setWindow(this);
 
-    SignalHandler_Function<> *handler = new SignalHandler_Function<>([this, example] () { startExample(example); });
+    SignalHandler_Function<>::Ptr handler = SignalHandler<>::function([this, example] () { startExample(example); });
     m_buttonSignalHandlers.push_back(handler);
 
     Button *button = createTextButton(example->name(), units);

@@ -27,6 +27,7 @@
 
 #include <assert.h>
 #include <vector>
+#include <unordered_set>
 #include <functional>
 #include <algorithm>
 
@@ -40,6 +41,10 @@ public:
     virtual ~SignalBase() {}
 };
 
+template <typename ... Arguments>
+class SignalHandler;
+template<typename ... Arguments>
+class SignalHandler_Function;
 
 template <typename ... Arguments>
 class SignalHandler
@@ -47,12 +52,18 @@ class SignalHandler
 public:
     virtual ~SignalHandler() { }
     virtual void onSignal(Arguments ...args) = 0;
+
+    static std::shared_ptr<SignalHandler_Function<Arguments...>> function(const std::function<void(Arguments ...)> handler) {
+        return std::make_shared<SignalHandler_Function<Arguments...>>(handler);
+    }
 };
 
 template<typename ... Arguments>
 class SignalHandler_Function : public SignalHandler<Arguments ...>
 {
 public:
+    using Ptr = std::shared_ptr<SignalHandler_Function<Arguments...>>;
+
     SignalHandler_Function(const std::function<void(Arguments ...)> handler) : m_handler(handler) { }
     void onSignal(Arguments ... args) override { m_handler(args...); }
 private:
@@ -84,7 +95,7 @@ class Signal : SignalBase
 {
     struct Bucket : public SignalEmitter::BucketBase
     {
-        std::vector<SignalHandler<Arguments ...> *> handlers;
+        std::unordered_set<std::shared_ptr<SignalHandler<Arguments ...>>> handlers;
     };
 
 public:
@@ -96,7 +107,7 @@ public:
         }
     }
 
-    void connect(SignalEmitter *emitter, SignalHandler<Arguments ...> *handler)
+    void connect(SignalEmitter *emitter, std::shared_ptr<SignalHandler<Arguments ...>> handler)
     {
         Bucket *bucket = findBucket(emitter);
         if (!bucket) {
@@ -107,16 +118,14 @@ public:
             }
             emitter->m_buckets->push_back(bucket);
         }
-        bucket->handlers.push_back(handler);
+        bucket->handlers.insert(handler);
     }
 
-    void disconnect(SignalEmitter *emitter, SignalHandler<Arguments ...> *handler)
+    void disconnect(SignalEmitter *emitter, std::shared_ptr<SignalHandler<Arguments ...>> handler)
     {
         Bucket *bucket = findBucket(emitter);
         assert(bucket);
-        auto pos = std::find(bucket->handlers.begin(), bucket->handlers.end(), handler);
-        assert(pos != bucket->handlers.end());
-        bucket->handlers.erase(pos);
+        bucket->handlers.erase(handler);
     }
 private:
 
@@ -135,6 +144,11 @@ private:
 SignalEmitter::~SignalEmitter()
 {
     onDestruction.emit(this);
+    if (m_buckets) {
+        for (SignalEmitter::BucketBase *bucket : *m_buckets) {
+            delete bucket;
+        }
+    }
     delete m_buckets;
 }
 

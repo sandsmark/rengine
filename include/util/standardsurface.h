@@ -34,7 +34,7 @@ class StandardSurface : public Surface
 public:
     StandardSurface()
     {
-        AnimationManager::onRunningChanged.connect(&m_animationManager, new SignalHandler_Function<>([this] {
+        AnimationManager::onRunningChanged.connect(&m_animationManager, std::make_shared<SignalHandler_Function<>>([this] {
             printf("running changed...\n");
             requestRender();
         }));

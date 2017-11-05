@@ -34,27 +34,27 @@ void tst_signal_basic()
 
     SignalEmitter emitter;
 
-    SignalHandler_Function<> voidLambda([&]() { called_void = true; });
-    SignalHandler_Function<> voidCFunc(cfunc_void);
+    SignalHandler_Function<>::Ptr voidLambda = SignalHandler<>::function([&]() { called_void = true; });
+    SignalHandler_Function<>::Ptr voidCFunc = SignalHandler<>::function(cfunc_void);
 
     Signal<> signal_void;
-    signal_void.connect(&emitter, &voidLambda);
-    signal_void.connect(&emitter, &voidCFunc);
+    signal_void.connect(&emitter, voidLambda);
+    signal_void.connect(&emitter, voidCFunc);
     signal_void.emit(&emitter);
     check_true(cfunc_void_called);
     check_true(called_void);
-    signal_void.disconnect(&emitter, &voidCFunc);
-    signal_void.disconnect(&emitter, &voidLambda);
+    signal_void.disconnect(&emitter, voidCFunc);
+    signal_void.disconnect(&emitter, voidLambda);
 
     int emitted_int = 0;
-    SignalHandler_Function<int> intLambda([&] (int value) {
+    SignalHandler_Function<int>::Ptr intLambda = SignalHandler<int>::function([&] (int value) {
         called_int = true;
         emitted_int = value;
     });
-    SignalHandler_Function<int> intCFunc(cfunc_int);
+    SignalHandler_Function<int>::Ptr intCFunc = SignalHandler<int>::function(cfunc_int);
     Signal<int> signal_int;
-    signal_int.connect(&emitter, &intLambda);
-    signal_int.connect(&emitter, &intCFunc);
+    signal_int.connect(&emitter, intLambda);
+    signal_int.connect(&emitter, intCFunc);
     signal_int.emit(&emitter, 42);
     check_true(called_int);
     check_true(cfunc_int_called);
@@ -64,16 +64,16 @@ void tst_signal_basic()
     std::string emitted_string;
     float emitted_float1 = 0;
     float emitted_float2 = 0;
-    SignalHandler_Function<std::string, float, float> stringFloatFloatLambda([&](std::string str, float a, float b) {
+    SignalHandler_Function<std::string, float, float>::Ptr stringFloatFloatLambda = SignalHandler<std::string, float, float>::function([&](std::string str, float a, float b) {
         called_string_float_float = true;
         emitted_string = str;
         emitted_float1 = a;
         emitted_float2 = b;
     });
-    SignalHandler_Function<std::string, float, float> stringFloatFloatCFunc(cfunc_string_float_float);
+    SignalHandler_Function<std::string, float, float>::Ptr stringFloatFloatCFunc = SignalHandler<std::string, float, float>::function (cfunc_string_float_float);
     Signal<std::string, float, float> signal_string_float_float;
-    signal_string_float_float.connect(&emitter, &stringFloatFloatLambda);
-    signal_string_float_float.connect(&emitter, &stringFloatFloatCFunc);
+    signal_string_float_float.connect(&emitter, stringFloatFloatLambda);
+    signal_string_float_float.connect(&emitter, stringFloatFloatCFunc);
     signal_string_float_float.emit(&emitter, std::string("one"), 2.0f, 3.0f);
     check_true(called_string_float_float);
     check_true(cfunc_string_float_float_called);
@@ -98,12 +98,12 @@ void tst_signal_onDestruction()
 {
     Node *node = Node::create();
 
-    OnSignalIncrement increment;
-    SignalEmitter::onDestruction.connect(node, &increment);
+    std::shared_ptr<OnSignalIncrement> increment = std::make_shared<OnSignalIncrement>();
+    SignalEmitter::onDestruction.connect(node, increment);
 
-    check_equal(increment.value, 0);
+    check_equal(increment->value, 0);
     node->destroy();
-    check_equal(increment.value, 1);
+    check_equal(increment->value, 1);
 
     cout << __PRETTY_FUNCTION__ << ": ok" << endl;
 }

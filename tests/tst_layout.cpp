@@ -29,78 +29,78 @@
 void tst_layoutnode_properties()
 {
     int callCounter = 0;
-    SignalHandler_Function<> signalHandler([&] {
+    SignalHandler_Function<>::Ptr signalHandler = SignalHandler<>::function([&] {
         callCounter++;
     });
 
     LayoutNode *node = LayoutNode::create();
 
-    LayoutNode::onMarginChanged.connect(node, &signalHandler);
+    LayoutNode::onMarginChanged.connect(node, signalHandler);
     node->setMargin(10);
-    LayoutNode::onMarginChanged.disconnect(node, &signalHandler);
+    LayoutNode::onMarginChanged.disconnect(node, signalHandler);
     check_equal(node->margin(), 10.0f);
     check_equal(callCounter, 1);
 
     callCounter = 0;
-    LayoutNode::onSpacingChanged.connect(node, &signalHandler);
+    LayoutNode::onSpacingChanged.connect(node, signalHandler);
     node->setSpacing(20);
-    LayoutNode::onSpacingChanged.disconnect(node, &signalHandler);
+    LayoutNode::onSpacingChanged.disconnect(node, signalHandler);
     check_equal(node->spacing(), 20.0f);
     check_equal(callCounter, 1);
 
     callCounter = 0;
-    LayoutNode::onWidthChanged.connect(node, &signalHandler);
+    LayoutNode::onWidthChanged.connect(node, signalHandler);
     node->setWidth(30);
-    LayoutNode::onWidthChanged.disconnect(node, &signalHandler);
+    LayoutNode::onWidthChanged.disconnect(node, signalHandler);
     check_equal(node->width(), 30.0f);
     check_equal(callCounter, 1);
 
     callCounter = 0;
-    LayoutNode::onHeightChanged.connect(node, &signalHandler);
+    LayoutNode::onHeightChanged.connect(node, signalHandler);
     node->setHeight(40);
-    LayoutNode::onHeightChanged.disconnect(node, &signalHandler);
+    LayoutNode::onHeightChanged.disconnect(node, signalHandler);
     check_equal(node->height(), 40.0f);
     check_equal(callCounter, 1);
 
     callCounter = 0;
-    LayoutNode::onCellWidthChanged.connect(node, &signalHandler);
+    LayoutNode::onCellWidthChanged.connect(node, signalHandler);
     node->setCellWidth(50);
-    LayoutNode::onCellWidthChanged.disconnect(node, &signalHandler);
+    LayoutNode::onCellWidthChanged.disconnect(node, signalHandler);
     check_equal(node->cellWidth(), 50.0f);
     check_equal(callCounter, 1);
 
     callCounter = 0;
-    LayoutNode::onCellHeightChanged.connect(node, &signalHandler);
+    LayoutNode::onCellHeightChanged.connect(node, signalHandler);
     node->setCellHeight(60);
-    LayoutNode::onCellHeightChanged.disconnect(node, &signalHandler);
+    LayoutNode::onCellHeightChanged.disconnect(node, signalHandler);
     check_equal(node->cellHeight(), 60.0f);
     check_equal(callCounter, 1);
 
     callCounter = 0;
-    LayoutNode::onColumnCountchanged.connect(node, &signalHandler);
+    LayoutNode::onColumnCountchanged.connect(node, signalHandler);
     node->setColumnCount(70);
-    LayoutNode::onColumnCountchanged.disconnect(node, &signalHandler);
+    LayoutNode::onColumnCountchanged.disconnect(node, signalHandler);
     check_equal(node->columnCount(), 70)
     check_equal(callCounter, 1);
 
     callCounter = 0;
-    LayoutNode::onRowCountChanged.connect(node, &signalHandler);
+    LayoutNode::onRowCountChanged.connect(node, signalHandler);
     node->setRowCount(80);
-    LayoutNode::onRowCountChanged.disconnect(node, &signalHandler);
+    LayoutNode::onRowCountChanged.disconnect(node, signalHandler);
     check_equal(node->rowCount(), 80);
     check_equal(callCounter, 1);
 
     callCounter = 0;
-    LayoutNode::onLayoutTypeChanged.connect(node, &signalHandler);
+    LayoutNode::onLayoutTypeChanged.connect(node, signalHandler);
     node->setLayoutType(LayoutEngine::Flow_Vertical);
-    LayoutNode::onLayoutTypeChanged.disconnect(node, &signalHandler);
+    LayoutNode::onLayoutTypeChanged.disconnect(node, signalHandler);
     check_equal(node->layoutType(), LayoutEngine::Flow_Vertical);
     check_equal(callCounter, 1);
 
     callCounter = 0;
-    LayoutNode::onLayoutTypeAsIntChanged.connect(node, &signalHandler);
+    LayoutNode::onLayoutTypeAsIntChanged.connect(node, signalHandler);
     node->setLayoutTypeAsInt(LayoutEngine::Flow_Horizontal);
-    LayoutNode::onLayoutTypeAsIntChanged.disconnect(node, &signalHandler);
+    LayoutNode::onLayoutTypeAsIntChanged.disconnect(node, signalHandler);
     check_equal(node->layoutTypeAsInt(), LayoutEngine::Flow_Horizontal);
     check_equal(callCounter, 1);
 

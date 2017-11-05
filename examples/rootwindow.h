@@ -55,5 +55,5 @@ private:
     std::vector<Example *> m_examples;
     Example *m_example = nullptr;
 
-    std::vector<rengine::SignalHandler<> *> m_buttonSignalHandlers;
+    std::vector<std::shared_ptr<rengine::SignalHandler<>>> m_buttonSignalHandlers;
 };

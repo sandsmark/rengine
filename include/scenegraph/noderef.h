@@ -50,18 +50,17 @@ private:
     struct Data : public SignalHandler<> 
     {
         NodeClass *node;
-        int ref;
         void onSignal() override { node = 0; }
     };
 
     void deref();
 
-    Data *m_data;
+    std::shared_ptr<Data> m_data;
 };
 
 template <typename NodeClass>
 NodeRef<NodeClass>::NodeRef(NodeClass *n)
-    : m_data(new Data())
+    : m_data(std::make_shared<Data>())
 {
     assert(n != nullptr);
     m_data->ref = 1;
