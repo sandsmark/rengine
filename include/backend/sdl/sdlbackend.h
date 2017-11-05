@@ -117,32 +117,43 @@ inline void SDLBackend::processEvents()
         SDL_PollEvent(&event);
 
         switch (event.type) {
-            case SDL_USEREVENT: {
-                // reset this before onRender so we don't prevent onRender from
-                // scheduling another one..
-                m_renderRequested = false;
-                m_surface->onRender();
+        case SDL_USEREVENT: {
+            // reset this before onRender so we don't prevent onRender from
+            // scheduling another one..
+            m_renderRequested = false;
+            m_surface->onRender();
+            break;
+        }
+        case SDL_MOUSEBUTTONDOWN: {
+            sendPointerEvent(&event, Event::PointerDown);
+            break;
+        }
+        case SDL_MOUSEBUTTONUP: {
+            sendPointerEvent(&event, Event::PointerUp);
+            break;
+        }
+        case SDL_MOUSEMOTION: {
+            sendPointerEvent(&event, Event::PointerMove);
+            break;
+        }
+        case SDL_QUIT: {
+            m_running = false;
+            break;
+        }
+        case SDL_WINDOWEVENT: {
+            Uint32 windowID = SDL_GetWindowID(m_window);
+            if (event.window.windowID != windowID) {
                 break;
             }
-            case SDL_MOUSEBUTTONDOWN: {
-                sendPointerEvent(&event, Event::PointerDown);
-                break;
+            if (event.window.event == SDL_WINDOWEVENT_RESIZED) {
+                requestRender();
             }
-            case SDL_MOUSEBUTTONUP: {
-                sendPointerEvent(&event, Event::PointerUp);
-                break;
-            }
-            case SDL_MOUSEMOTION: {
-                sendPointerEvent(&event, Event::PointerMove);
-                break;
-            }
-            case SDL_QUIT: {
-                m_running = false;
-                break;
-            }
-            default: {
-                // logw << "unknown event.type " << event.type << std::endl;
-            }
+
+            break;
+        }
+        default: {
+            // logw << "unknown event.type " << event.type << std::endl;
+        }
         }
     }
 }
