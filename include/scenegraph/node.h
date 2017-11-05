@@ -278,7 +278,7 @@ public:
     bool isPointerTarget() const { return m_pointerTarget; }
     void setPointerTarget(bool target) { m_pointerTarget = target; }
 
-    virtual bool onPointerEvent(PointerEvent *e) { return false; }
+    virtual bool onPointerEvent(PointerEvent*) { return false; }
 
 protected:
     virtual void onPreprocess() { }

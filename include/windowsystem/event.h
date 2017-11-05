@@ -111,6 +111,7 @@ public:
         Key_6,
         Key_7,
         Key_8,
+        Key_9,
         Key_A,
         Key_B,
         Key_C,
@@ -144,6 +145,7 @@ public:
         Key_Enter,
         Key_Space,
         Key_Backspace,
+        Key_Escape,
 
         // Also modifiers
         Key_Shift = 0x80,
@@ -167,6 +169,12 @@ public:
     int modifiers() const {
         return m_modifiers;
     }
+
+    static KeyEvent *from(Event *e) {
+        assert(e->type() == KeyUp || e->type() == KeyDown);
+        return static_cast<KeyEvent *>(e);
+    }
+
 
 private:
     Key m_keyCode;

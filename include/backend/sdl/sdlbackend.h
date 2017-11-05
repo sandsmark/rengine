@@ -25,6 +25,7 @@
 */
 
 #include <SDL.h>
+#include <unordered_map>
 
 RENGINE_BEGIN_NAMESPACE
 
@@ -62,6 +63,7 @@ public:
     Renderer *createRenderer() override;
 
     void sendPointerEvent(SDL_Event *e, Event::Type type);
+    void sendKeyEvent(SDL_Event *sdlEvent, Event::Type type);
 
     unsigned devicePixelRatio() const;
 
@@ -136,6 +138,12 @@ inline void SDLBackend::processEvents()
             sendPointerEvent(&event, Event::PointerMove);
             break;
         }
+        case SDL_KEYUP:
+            sendKeyEvent(&event, Event::KeyUp);
+            break;
+        case SDL_KEYDOWN:
+            sendKeyEvent(&event, Event::KeyDown);
+            break;
         case SDL_QUIT: {
             m_running = false;
             break;
@@ -169,6 +177,75 @@ inline void SDLBackend::sendPointerEvent(SDL_Event *sdlEvent, Event::Type type)
     m_surface->onEvent(&pe);
 }
 
+inline void SDLBackend::sendKeyEvent(SDL_Event *sdlEvent, Event::Type type)
+{
+    assert(m_window);
+    assert(SDL_GetWindowID(m_window) == sdlEvent->key.windowID);
+    assert(m_surface);
+
+    // Can recommend "generating" this with vim
+    const static std::unordered_map<SDL_Keycode, KeyEvent::Key> keyMap ({
+        {SDLK_0, KeyEvent::Key_0},
+        {SDLK_1, KeyEvent::Key_1},
+        {SDLK_2, KeyEvent::Key_2},
+        {SDLK_3, KeyEvent::Key_3},
+        {SDLK_4, KeyEvent::Key_4},
+        {SDLK_5, KeyEvent::Key_5},
+        {SDLK_6, KeyEvent::Key_6},
+        {SDLK_7, KeyEvent::Key_7},
+        {SDLK_8, KeyEvent::Key_8},
+        {SDLK_9, KeyEvent::Key_9},
+        {SDLK_a, KeyEvent::Key_A},
+        {SDLK_b, KeyEvent::Key_B},
+        {SDLK_c, KeyEvent::Key_C},
+        {SDLK_d, KeyEvent::Key_D},
+        {SDLK_e, KeyEvent::Key_E},
+        {SDLK_f, KeyEvent::Key_F},
+        {SDLK_g, KeyEvent::Key_G},
+        {SDLK_h, KeyEvent::Key_H},
+        {SDLK_i, KeyEvent::Key_I},
+        {SDLK_j, KeyEvent::Key_J},
+        {SDLK_k, KeyEvent::Key_K},
+        {SDLK_l, KeyEvent::Key_L},
+        {SDLK_m, KeyEvent::Key_M},
+        {SDLK_n, KeyEvent::Key_N},
+        {SDLK_o, KeyEvent::Key_O},
+        {SDLK_p, KeyEvent::Key_P},
+        {SDLK_q, KeyEvent::Key_Q},
+        {SDLK_r, KeyEvent::Key_R},
+        {SDLK_s, KeyEvent::Key_S},
+        {SDLK_t, KeyEvent::Key_T},
+        {SDLK_u, KeyEvent::Key_U},
+        {SDLK_v, KeyEvent::Key_V},
+        {SDLK_w, KeyEvent::Key_W},
+        {SDLK_x, KeyEvent::Key_X},
+        {SDLK_y, KeyEvent::Key_Y},
+        {SDLK_z, KeyEvent::Key_Z},
+
+        {SDLK_UP, KeyEvent::Key_Up},
+        {SDLK_LEFT, KeyEvent::Key_Left},
+        {SDLK_RIGHT, KeyEvent::Key_Right},
+        {SDLK_DOWN, KeyEvent::Key_Down},
+
+        {SDLK_RETURN, KeyEvent::Key_Enter},
+        {SDLK_KP_ENTER, KeyEvent::Key_Enter},
+        {SDLK_SPACE, KeyEvent::Key_Space},
+        {SDLK_BACKSPACE, KeyEvent::Key_Backspace},
+        {SDLK_ESCAPE, KeyEvent::Key_Escape},
+    });
+    const std::unordered_map<SDL_Keycode, KeyEvent::Key>::const_iterator keyMapPos = keyMap.find(sdlEvent->key.keysym.sym);
+
+    if (keyMapPos == keyMap.end()) {
+        logd << "unknown key event " << SDL_GetScancodeName(sdlEvent->key.keysym.scancode) << std::endl;
+        return;
+    }
+
+    KeyEvent keyEvent(type);
+    keyEvent.initialize(keyMapPos->second, 0);
+    m_surface->onEvent(&keyEvent);
+
+}
+
 inline SurfaceBackendImpl *SDLBackend::createSurface(Surface *surface)
 {
     assert(surface); // Called with valid input
@@ -197,7 +274,7 @@ inline SurfaceBackendImpl *SDLBackend::createSurface(Surface *surface)
     return this;
 }
 
-inline void SDLBackend::destroySurface(Surface *surface, SurfaceBackendImpl *impl)
+inline void SDLBackend::destroySurface(Surface */*surface*/, SurfaceBackendImpl */*impl*/)
 {
     SDL_GL_DeleteContext(m_gl);
     SDL_DestroyWindow(m_window);
