@@ -37,6 +37,8 @@ Button::~Button()
 {
     if (m_animation)
         m_surface->animationManager()->stop(m_animation);
+
+    m_surface->removePointerEventReceiver(this);
 }
 
 void Button::onPreprocess()
@@ -101,10 +103,10 @@ bool Button::onPointerEvent(PointerEvent *e)
         onClicked.emit(this);
     } else if (e->type() == Event::PointerMove) {
         if (geometry().contains(e->position())) {
-            m_surface->setPointerEventReceiver(this);
+            m_surface->addPointerEventReceiver(this);
             setState(HoveredState);
         } else {
-            m_surface->setPointerEventReceiver(nullptr);
+            m_surface->removePointerEventReceiver(this);
             setState(DefaultState);
             return false;
         }

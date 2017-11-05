@@ -154,7 +154,6 @@ void RootWindow::exampleClosed()
         return;
     }
 
-    setPointerEventReceiver(nullptr);
     m_appLayer->remove(m_example);
     m_appLayer->remove(m_closeButton);
     m_appLayer->setOpacity(0);

@@ -25,6 +25,8 @@
 
 #pragma once
 
+#include <unordered_set>
+
 RENGINE_BEGIN_NAMESPACE
 
 class StandardSurface : public Surface
@@ -114,8 +116,8 @@ public:
         Set the pointer event receiver to node to indicate that onPointerEvent() should
         be called with \a node as argument regardless of where the pointer is.
      */
-    void setPointerEventReceiver(Node *node) { m_pointerEventReceiver = node; }
-    Node *pointerEventReceiver() const { return m_pointerEventReceiver; }
+    void addPointerEventReceiver(Node *node) { m_pointerEventReceivers.insert(node); }
+    void removePointerEventReceiver(Node *node) { m_pointerEventReceivers.erase(node); }
 
 protected:
     bool deliverPointerEventInScene(Node *n, PointerEvent *e);
@@ -123,7 +125,7 @@ protected:
     std::unique_ptr<Renderer> m_renderer;
     AnimationManager m_animationManager;
 
-    Node *m_pointerEventReceiver = nullptr;
+    std::unordered_set<Node*> m_pointerEventReceivers;
 
     WorkQueue m_workQueue;
 };
@@ -134,22 +136,39 @@ inline void StandardSurface::onEvent(Event *e)
     switch (e->type()) {
     case Event::PointerDown:
     case Event::PointerUp:
-    case Event::PointerMove:
-        if (m_renderer && m_renderer->sceneRoot()) {
-            PointerEvent *pe = PointerEvent::from(e);
-            if (m_pointerEventReceiver && m_pointerEventReceiver->isPointerTarget()) {
-                bool inv = false;
-                mat4 invNodeMatrix = TransformNode::matrixFor(m_pointerEventReceiver, m_renderer->sceneRoot()).inverted(&inv);
-                if (inv)
-                    pe->setPosition(invNodeMatrix * pe->positionInSurface());
-                else
-                    pe->setPosition(vec2());
-                m_pointerEventReceiver->onPointerEvent(pe);
-            } else {
-                deliverPointerEventInScene(m_renderer->sceneRoot(), pe);
+    case Event::PointerMove:{
+        if (!m_renderer || !m_renderer->sceneRoot()) {
+            return;
+        }
+        PointerEvent *pe = PointerEvent::from(e);
+
+        // Need a local copy of this in case any of the nodes decide to remove themselves
+        std::unordered_set<Node*> receivers = m_pointerEventReceivers;
+
+        if (receivers.empty()) {
+            deliverPointerEventInScene(m_renderer->sceneRoot(), pe);
+            return;
+        }
+
+        for (Node *receiver : receivers) {
+            if (!receiver || !receiver->isPointerTarget()) {
+                continue;
+            }
+
+            bool inv = false;
+            mat4 invNodeMatrix = TransformNode::matrixFor(receiver, m_renderer->sceneRoot()).inverted(&inv);
+            if (inv)
+                pe->setPosition(invNodeMatrix * pe->positionInSurface());
+            else
+                pe->setPosition(vec2());
+
+            if (receiver->onPointerEvent(pe)) {
+                return;
             }
         }
+
         break;
+    }
     default:
         std::cerr << __PRETTY_FUNCTION__ << ": unknown event type=" << e->type() << std::endl;
         break;
