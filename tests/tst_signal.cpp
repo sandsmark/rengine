@@ -47,14 +47,12 @@ void tst_signal_basic()
     signal_void.disconnect(&emitter, voidLambda);
 
     int emitted_int = 0;
-    SignalHandler_Function<int>::Ptr intLambda = SignalHandler<int>::function([&] (int value) {
+    Signal<int> signal_int;
+    signal_int.connect(&emitter, [&] (int value) {
         called_int = true;
         emitted_int = value;
     });
-    SignalHandler_Function<int>::Ptr intCFunc = SignalHandler<int>::function(cfunc_int);
-    Signal<int> signal_int;
-    signal_int.connect(&emitter, intLambda);
-    signal_int.connect(&emitter, intCFunc);
+    signal_int.connect(&emitter, cfunc_int);
     signal_int.emit(&emitter, 42);
     check_true(called_int);
     check_true(cfunc_int_called);

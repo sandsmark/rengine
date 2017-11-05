@@ -107,6 +107,10 @@ public:
         }
     }
 
+    void connect(SignalEmitter *emitter, const std::function<void(Arguments ...)> function) {
+        connect(emitter, SignalHandler<Arguments...>::function(function));
+    }
+
     void connect(SignalEmitter *emitter, std::shared_ptr<SignalHandler<Arguments ...>> handler)
     {
         Bucket *bucket = findBucket(emitter);
