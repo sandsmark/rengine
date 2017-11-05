@@ -34,43 +34,45 @@ template <typename T>
 class AllocationPool
 {
 public:
-    AllocationPool()
-        : m_memory(0)
-        , m_free(0)
-        , m_nextFree(0)
-        , m_poolSize(0)
+    typedef T value_type;
+
+    AllocationPool() :
+        m_pool(std::make_shared<Pool>())
     {
     }
+    AllocationPool(const AllocationPool &other) : m_pool(other.m_pool) {}
 
     /*!
      * For internal use only, called by setup macroes.
      */
     void setMemory(void *m, unsigned blockCount) {
-        assert(m_memory == 0);
-        assert(m_free == 0);
-        assert(m_nextFree == 0);
-        assert(m_poolSize == 0);
+        assert(m_pool);
+        assert(m_pool->memory == 0);
+        assert(m_pool->free == 0);
+        assert(m_pool->nextFree == 0);
+        assert(m_pool->size == 0);
 
-        m_poolSize = blockCount;
-        m_memory = (T *) m;
-        m_free = (unsigned *) (m_memory + blockCount);
-        m_nextFree = 0;
-        for (unsigned i=0; i<blockCount; ++i)
-            m_free[i] = i;
+        m_pool->size = blockCount;
+        m_pool->memory = (T *) m;
+        m_pool->free = (unsigned *) (m_pool->memory + blockCount);
+        m_pool->nextFree = 0;
+        for (unsigned i=0; i<blockCount; ++i) {
+            m_pool->free[i] = i;
+        }
     }
 
     T *allocate() {
         assert(!isExhausted());
-        assert(m_memory);
-        assert(m_free);
-        assert(m_free[m_nextFree] < m_poolSize);
+        assert(m_pool->memory);
+        assert(m_pool->free);
+        assert(m_pool->free[m_pool->nextFree] < m_pool->size);
 
         // std::cout << "AllocationPool::allocate: memory=" << m_memory
         //           << ", free=" << m_free
         //           << ", nextFree=" << m_nextFree
         //           << ", free[nextFree]=" << m_free[m_nextFree] << std::endl;
 
-        T *t = m_memory + m_free[m_nextFree++];
+        T *t = m_pool->memory + m_pool->free[m_pool->nextFree++];
         // std::cout << " --> t=" << (void *) t
         //           << ", nextFree=" << m_nextFree
         //           << ", free[nextFree]=" << m_free[m_nextFree] << std::endl;
@@ -79,28 +81,31 @@ public:
     }
 
     void deallocate(T *t) {
-        assert(m_memory);
-        assert(m_free);
-        assert(m_nextFree > 0);
+        assert(m_pool->memory);
+        assert(m_pool->free);
+        assert(m_pool->nextFree > 0);
         assert(isAlloctated(t));
 
-        unsigned pos = t - m_memory;
+        unsigned pos = t - m_pool->memory;
 
-        --m_nextFree;
-        m_free[m_nextFree] = pos;
+        --m_pool->nextFree;
+        m_pool->free[m_pool->nextFree] = pos;
 
         // Call the destructor...
         t->~T();
     }
 
-    bool isExhausted() const { return m_nextFree >= m_poolSize; }
-    bool isAlloctated(T *t) const { return unsigned(t - m_memory) < m_poolSize; }
+    bool isExhausted() const { return m_pool->nextFree >= m_pool->size; }
+    bool isAlloctated(T *t) const { return unsigned(t - m_pool->memory) < m_pool->size; }
 
 private:
-    T *m_memory;
-    unsigned *m_free;
-    unsigned m_nextFree;
-    unsigned m_poolSize;
+    struct Pool {
+        T *memory = nullptr;
+        unsigned *free = nullptr;
+        unsigned nextFree = 0u;
+        unsigned size = 0u;
+    };
+    std::shared_ptr<Pool> m_pool;
 };
 
 #define RENGINE_ALLOCATION_POOL(Type, Name, Count) \
