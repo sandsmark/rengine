@@ -110,13 +110,13 @@ inline vec2 SDLBackend::size() const
 inline void SDLBackend::processEvents()
 {
     SDL_Event event;
-    int evt = SDL_PollEvent(nullptr);
+    int evt = SDL_WaitEvent(nullptr);
 
     // This odd-looking construct ensures we do not process events that are
     // pushed onto the queue after we start processing, so as to not starve the
     // main loop.
     while (evt-- > 0) {
-        SDL_PollEvent(&event);
+        SDL_WaitEvent(&event);
 
         switch (event.type) {
         case SDL_USEREVENT: {
@@ -264,7 +264,7 @@ inline SurfaceBackendImpl *SDLBackend::createSurface(Surface *surface)
     SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES, 4);
 
     m_window = SDL_CreateWindow("rengine", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
-                                800, 480, SDL_WINDOW_OPENGL | SDL_WINDOW_HIDDEN | SDL_WINDOW_ALLOW_HIGHDPI );
+                                1600, 1200, SDL_WINDOW_OPENGL | SDL_WINDOW_HIDDEN | SDL_WINDOW_ALLOW_HIGHDPI );
 
     m_gl = SDL_GL_CreateContext(m_window);
     SDL_GL_SetSwapInterval(1);
