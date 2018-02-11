@@ -190,7 +190,12 @@ inline void SDLBackend::processEvents()
 inline void SDLBackend::sendPointerEvent(SDL_Event *sdlEvent, Event::Type type)
 {
     assert(m_window);
-    assert(SDL_GetWindowID(m_window) == sdlEvent->button.windowID);
+
+    // The mouse might go outside our window
+    if (SDL_GetWindowID(m_window) != sdlEvent->button.windowID) {
+        return;
+    }
+
     assert(m_surface);
 
     PointerEvent pe(type);
