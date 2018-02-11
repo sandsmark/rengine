@@ -35,7 +35,7 @@ public:
 
     static Backend *get();
 
-    void quit();
+    virtual void quit();
     void run();
 
     virtual void processEvents() = 0;

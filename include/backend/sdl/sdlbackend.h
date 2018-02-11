@@ -80,6 +80,8 @@ public:
 
     vec2 dpi() const override;
 
+    void quit() override;
+
 
 private:
     Surface *m_surface = nullptr;
@@ -365,6 +367,15 @@ inline vec2 SDLBackend::dpi() const
     float d, h, v;
     SDL_GetDisplayDPI(index, &d, &h, &v);
     return vec2(h, v) * devicePixelRatio();
+}
+
+inline void SDLBackend::quit()
+{
+    // Wake up the event loop
+    SDL_Event quitEvent;
+    quitEvent.quit.type = SDL_QUIT;
+    quitEvent.quit.timestamp = SDL_GetTicks();
+    SDL_PushEvent(&quitEvent);
 }
 
 #define RENGINE_BACKEND rengine::SDLBackend
