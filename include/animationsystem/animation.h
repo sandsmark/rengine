@@ -161,7 +161,10 @@ template <typename Target,
 class Animation : public AbstractAnimation
 {
 public:
-    Animation(Target *target) : m_target(target) { }
+    Animation(Target *target) :
+        m_target(target)
+      , m_stopRequested(false)
+    {}
 
     std::vector<KeyFrame<Value>> &keyFrames() { return m_keyFrames; }
 
@@ -176,7 +179,7 @@ public:
         assert(m_keyFrames.size()); // no animations without 'em.
 
         // std::cout << "tick: time=" << time << std::endl;
-        bool stop = false;
+        bool stop = m_stopRequested;
         int curIter = (int) (time / m_duration);
         double timeInThisIteration = fmod(time, m_duration);
         if (m_iterations >= 0 && curIter >= m_iterations) {
@@ -232,9 +235,12 @@ public:
             setRunning(false);
     }
 
+    void requestStop() { m_stopRequested = true; }
+
 private:
     Target *m_target;
     std::vector<KeyFrame<Value>> m_keyFrames;
+    unsigned m_stopRequested : 1;
 };
 
 template <typename Target, void(Target::*MemberFunction)()>
