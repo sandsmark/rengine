@@ -134,6 +134,12 @@ public:
      */
     virtual void onEvent(Event *) { }
 
+    /*!
+     * FIXME: Do something better with timer events or something
+     * Called once per event loop iteration (~60 times a second)
+     */
+    virtual void onTick() = 0;
+
 private:
     SurfaceBackendImpl *m_impl;
 };

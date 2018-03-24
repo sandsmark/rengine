@@ -354,8 +354,12 @@ inline void AnimationManager::stop(const std::shared_ptr<AbstractAnimation> &ani
         if (it->animation == animation) {
             assert(animation->isRunning());
             m_runningAnimations.erase(it);
+            animation->setRunning(false);
             break;
         }
+    }
+    if (m_runningAnimations.empty()) {
+        setRunning(false);
     }
     for (auto it = m_scheduledAnimations.begin(); it != m_scheduledAnimations.end(); ++it) {
         if (it->animation == animation) {

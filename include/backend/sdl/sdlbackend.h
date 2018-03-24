@@ -26,6 +26,7 @@
 
 #include <SDL.h>
 #include <unordered_map>
+#include <chrono>
 
 RENGINE_BEGIN_NAMESPACE
 
@@ -48,6 +49,8 @@ public:
         if (SDL_Init(SDL_INIT_VIDEO) < 0)
             SDLBackend_die("Unable to initialize SDL");
         logi << "SDLBackend: created..." << std::endl;
+
+        m_nextUpdateTime = m_clock.now();
     }
 
     ~SDLBackend()
@@ -89,6 +92,9 @@ private:
     SDL_GLContext m_gl = nullptr;
 
     bool m_renderRequested = false;
+
+    std::chrono::steady_clock m_clock;
+    std::chrono::steady_clock::time_point m_nextUpdateTime;
 };
 
 
@@ -111,14 +117,25 @@ inline vec2 SDLBackend::size() const
 
 inline void SDLBackend::processEvents()
 {
+    using namespace std::chrono_literals;
+    using namespace std::chrono;
+
     SDL_Event event;
-    int evt = SDL_WaitEvent(nullptr);
+    int evt = 0;
+    const steady_clock::time_point now = m_clock.now();
+    const milliseconds waitTime  = duration_cast<milliseconds>(m_nextUpdateTime - now);
+    m_nextUpdateTime = now + 16ms;
+    if (waitTime < milliseconds::zero()) {
+        evt = SDL_PollEvent(nullptr);
+    } else {
+        evt = SDL_WaitEventTimeout(nullptr, waitTime.count());
+    }
 
     // This odd-looking construct ensures we do not process events that are
     // pushed onto the queue after we start processing, so as to not starve the
     // main loop.
     while (evt-- > 0) {
-        SDL_WaitEvent(&event);
+        SDL_PollEvent(&event);
 
         switch (event.type) {
         case SDL_USEREVENT: {
@@ -166,6 +183,8 @@ inline void SDLBackend::processEvents()
         }
         }
     }
+
+    m_surface->onTick();
 }
 
 inline void SDLBackend::sendPointerEvent(SDL_Event *sdlEvent, Event::Type type)
@@ -317,7 +336,8 @@ inline Renderer *SDLBackend::createRenderer()
     return r;
 }
 
-inline void SDLBackend::requestRender() {
+inline void SDLBackend::requestRender()
+{
     if (m_renderRequested)
         return;
     m_renderRequested = true;
