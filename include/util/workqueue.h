@@ -110,7 +110,7 @@ private:
      */
     void run();
 
-    std::thread m_thread;
+    std::unique_ptr<std::thread> m_thread;
     std::mutex m_mutex;
     std::condition_variable m_condition;
     std::list<std::shared_ptr<Job>> m_jobs;
@@ -119,8 +119,8 @@ private:
 };
 
 inline WorkQueue::WorkQueue()
-    : m_thread(&WorkQueue::run, this)
 {
+    m_thread = std::make_unique<std::thread>(&WorkQueue::run, this);
 }
 
 inline WorkQueue::~WorkQueue()
@@ -132,7 +132,7 @@ inline WorkQueue::~WorkQueue()
     m_mutex.unlock();
 
     // Wait for it to finish..
-    m_thread.join();
+    m_thread->join();
 }
 
 inline void WorkQueue::run()
