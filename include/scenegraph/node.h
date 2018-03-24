@@ -400,6 +400,8 @@ public:
     void setMatrix_rotateAroundY(float radians) { setMatrix(mat4::rotateAroundY(radians)); }
     void setMatrix_rotateAroundZ(float radians) { setMatrix(mat4::rotateAroundZ(radians)); }
     void setMatrix_rotate2D(float radians) { setMatrix(mat4::rotate2D(radians)); }
+    void setMatrix_x(float x) { m_matrix.m[3] = x; }
+    void setMatrix_y(float y) { m_matrix.m[7] = y; }
 
 protected:
     TransformNode()
