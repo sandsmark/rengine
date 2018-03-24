@@ -122,18 +122,17 @@ inline void SDLBackend::processEvents()
 
     SDL_Event event;
     int evt = 0;
-    const steady_clock::time_point now = m_clock.now();
-    const milliseconds waitTime  = duration_cast<milliseconds>(m_nextUpdateTime - now);
-    m_nextUpdateTime = now + 16ms;
-    if (waitTime < milliseconds::zero()) {
+    const milliseconds waitTime  = duration_cast<milliseconds>(m_nextUpdateTime - m_clock.now());
+
+    if (waitTime <= milliseconds::zero()) {
         evt = SDL_PollEvent(nullptr);
+        m_nextUpdateTime = m_clock.now() + 16ms;
+        m_surface->onTick();
     } else {
         evt = SDL_WaitEventTimeout(nullptr, waitTime.count());
     }
 
-    // This odd-looking construct ensures we do not process events that are
-    // pushed onto the queue after we start processing, so as to not starve the
-    // main loop.
+
     while (evt-- > 0) {
         SDL_PollEvent(&event);
 
@@ -172,9 +171,8 @@ inline void SDLBackend::processEvents()
             if (event.window.windowID != windowID) {
                 break;
             }
-            if (event.window.event == SDL_WINDOWEVENT_RESIZED) {
-                requestRender();
-            }
+
+            requestRender();
 
             break;
         }
@@ -183,8 +181,6 @@ inline void SDLBackend::processEvents()
         }
         }
     }
-
-    m_surface->onTick();
 }
 
 inline void SDLBackend::sendPointerEvent(SDL_Event *sdlEvent, Event::Type type)
