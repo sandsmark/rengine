@@ -35,7 +35,6 @@ public:
     StandardSurface()
     {
         AnimationManager::onRunningChanged.connect(&m_animationManager, std::make_shared<SignalHandler_Function<>>([this] {
-            printf("running changed...\n");
             requestRender();
         }));
     }

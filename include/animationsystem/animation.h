@@ -324,6 +324,14 @@ inline void AnimationManager::setRunning(bool running)
 inline void AnimationManager::start(const std::shared_ptr<AbstractAnimation> &animation, double delay)
 {
     setRunning(true);
+
+    for (auto it = m_scheduledAnimations.begin(); it != m_scheduledAnimations.end(); ++it) {
+        if (it->animation == animation) {
+            m_scheduledAnimations.erase(it);
+            break;
+        }
+    }
+
     ManagedAnimation m;
     m.start = now() + std::chrono::microseconds(int64_t(delay * 1000000));
     m.animation = animation;
