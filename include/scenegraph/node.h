@@ -379,11 +379,11 @@ public:
         return node;
     }
 
-    static mat4 matrixFor(Node *descendant, Node *root = 0) {
-        Node *n = descendant;
+    static mat4 matrixFor(const Node *descendant, const Node *root = 0) {
+        const Node *n = descendant;
         mat4 m;
-        while (true) {
-            if (TransformNode *tn = TransformNode::from(n)) {
+        while (n) {
+            if (const TransformNode *tn = TransformNode::from(n)) {
                 m = tn->matrix() * m;
             }
             if (n == root)
