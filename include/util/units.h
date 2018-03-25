@@ -57,9 +57,9 @@ public:
 
     float tinyFont() const  { return base(); }
     float smallFont() const { return std::round(base() * 1.25f); }
-    float font() const      { return std::round(base() * 1.75f); }
-    float largeFont() const { return std::round(base() * 2.5f); }
-    float hugeFont() const  { return std::round(base() * 4.0f); }
+    float font() const      { return std::round(base() * 2.5f); }
+    float largeFont() const { return std::round(base() * 4.0f); }
+    float hugeFont() const  { return std::round(base() * 10.0f); }
 
     float mm() const { return m_dpi / 25.4; }
     float cm() const { return m_dpi / 2.54; }
