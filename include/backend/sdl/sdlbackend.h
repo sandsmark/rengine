@@ -289,6 +289,11 @@ inline SurfaceBackendImpl *SDLBackend::createSurface(Surface *surface)
                                 1600, 1200, SDL_WINDOW_OPENGL | SDL_WINDOW_HIDDEN | SDL_WINDOW_ALLOW_HIGHDPI );
 
     m_gl = SDL_GL_CreateContext(m_window);
+
+#if defined(RENGINE_OPENGL_DESKTOP) && !defined(__APPLE__)
+    glewInit();
+#endif
+
     SDL_GL_SetSwapInterval(1);
 
     requestRender();

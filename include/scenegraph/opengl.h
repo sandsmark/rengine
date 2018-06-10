@@ -29,11 +29,7 @@
 #    ifdef __APPLE__
 #        include <OpenGL/gl.h>
 #    else
-         // This is a bit questionable.. We're using gl2.h headers to avoid
-         // having to resolve GL2 functions, but we'll still be linkings
-         // agsinst libGL.so, so this might not be compatible. If so, resolve
-         // the functions in openglrenderer.h
-#        include <GLES2/gl2.h>
+#        include <GL/glew.h>
 #    endif
 #    define RENGINE_GLSL(code) "#define highp\n#define mediump\n#define lowp\n"#code
 #else
