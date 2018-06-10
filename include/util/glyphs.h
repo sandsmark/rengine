@@ -29,6 +29,8 @@
 
 #include <iostream>
 #include <fstream>
+#include <locale>
+#include <codecvt>
 
 RENGINE_BEGIN_NAMESPACE
 
@@ -54,6 +56,10 @@ private:
 class GlyphTextureJob : public WorkQueue::Job
 {
 public:
+
+    /*!
+        Assumes that the passed text is utf8.
+    */
     GlyphTextureJob(GlyphContext *context, const std::string &text, int pixelSize, vec4 color = vec4(1, 1, 1, 1))
         : m_context(context)
         , m_text(text)
@@ -119,6 +125,9 @@ inline GlyphContext::~GlyphContext()
 
 inline void GlyphTextureJob::onExecute()
 {
+    static std::wstring_convert<std::codecvt_utf8<char32_t>, char32_t> utf8Decoder;
+    const std::u32string codepoints = utf8Decoder.from_bytes(m_text);
+
     auto start = std::chrono::system_clock::now();
 
     const stbtt_fontinfo *fontInfo = m_context->fontInfo();
@@ -143,8 +152,8 @@ inline void GlyphTextureJob::onExecute()
     int maxBmWidth = 0;
     int maxBmHeight = 0;
 
-    for (int i=0; m_text[i]; ++i) {
-        int g = stbtt_FindGlyphIndex(fontInfo, m_text[i]);
+    for (int i=0; codepoints[i]; ++i) {
+        int g = stbtt_FindGlyphIndex(fontInfo, codepoints[i]);
         if (i > 1) {
             xpos += scale*stbtt_GetCodepointKernAdvance(fontInfo, glyphs.back(), g);
         }
