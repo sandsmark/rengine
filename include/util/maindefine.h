@@ -31,6 +31,8 @@ RENGINE_BEGIN_NAMESPACE
 
 template <typename SurfaceName>
 int rengine_main(int argc, char **argv) {
+    (void)argc;
+    (void)argv;
     RENGINE_BACKEND backend;
     SurfaceName surface;
     surface.show();
