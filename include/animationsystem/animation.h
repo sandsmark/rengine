@@ -217,7 +217,7 @@ public:
 
         // std::cout << " - using: [ " << i0 << " -> " << i1 << " ] out of " << m_keyFrames.size() << std::endl;
 
-        assert(i0 >= 0);
+        assert(i0 < m_keyFrames.size());
         assert(i1 < m_keyFrames.size());
         double t0 = m_keyFrames.at(i0).time;
         double t1 = m_keyFrames.at(i1).time;
