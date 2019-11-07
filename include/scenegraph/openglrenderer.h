@@ -113,7 +113,7 @@ public:
     void build(Node *n);
     void drawColorQuad(unsigned bufferOffset, vec4 color);
     void drawTextureQuad(unsigned bufferOffset, GLuint texId, float opacity = 1.0, Texture::Format format = Texture::RGBA_32);
-    void drawColorFilterQuad(unsigned bufferOffset, GLuint texId, mat4 cm);
+    void drawColorFilterQuad(unsigned bufferOffset, GLuint texId, const mat4 &cm);
     void drawBlurQuad(unsigned bufferOffset, GLuint texId, int radius, vec2 renderSize, vec2 textureSize, vec2 step);
     void drawShadowQuad(unsigned bufferOffset, GLuint texId, int radius, vec2 renderSize, vec2 textureSize, vec2 step, vec4 color);
     void activateShader(const Program *shader);
@@ -360,7 +360,7 @@ inline void OpenGLRenderer::drawColorQuad(unsigned offset, vec4 c)
     glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 }
 
-inline void OpenGLRenderer::drawColorFilterQuad(unsigned offset, GLuint texId, mat4 matrix)
+inline void OpenGLRenderer::drawColorFilterQuad(unsigned offset, GLuint texId, const mat4 &matrix)
 {
     activateShader(&prog_colorFilter);
     ensureMatrixUpdated(UpdateColorFilterProgram, &prog_colorFilter);

@@ -221,7 +221,7 @@ struct mat4 {
     {
     }
 
-    bool operator==(mat4 o) const {
+    bool operator==(const mat4 &o) const {
         return    m[ 0] == o.m[ 0]
                && m[ 1] == o.m[ 1]
                && m[ 2] == o.m[ 2]
@@ -240,7 +240,7 @@ struct mat4 {
                && m[15] == o.m[15];
     }
 
-    mat4 operator*(mat4 o) const {
+    mat4 operator*(const mat4 &o) const {
 
         if (type == Translation2D && o.type == Translation2D) {
             return mat4(1, 0, 0, m[3]+o.m[3],
@@ -630,7 +630,7 @@ inline std::ostream &operator<<(std::ostream &o, vec4 v) {
     return o;
 }
 
-inline std::ostream &operator<<(std::ostream &o, mat4 m) {
+inline std::ostream &operator<<(std::ostream &o, const mat4 &m) {
     o << "mat4(" << m.m[0];
     for (int i=1; i<16; ++i)
         o << ", " << m.m[i];

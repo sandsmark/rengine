@@ -365,14 +365,14 @@ class TransformNode : public Node
 {
 public:
     mat4 matrix() const { return m_matrix; }
-    void setMatrix(mat4 m) { m_matrix = m; }
+    void setMatrix(const mat4 &m) { m_matrix = m; }
 
     float projectionDepth() const { return m_projectionDepth; }
     void setProjectionDepth(float d) { m_projectionDepth = d; }
 
     RENGINE_ALLOCATION_POOL_DECLARATION(TransformNode, rengine_TransformNode);
 
-    static TransformNode *create(mat4 matrix, float projectionDepth = 0) {
+    static TransformNode *create(const mat4 &matrix, float projectionDepth = 0) {
         auto node = create();
         node->setMatrix(matrix);
         node->setProjectionDepth(projectionDepth);
@@ -665,12 +665,12 @@ protected:
 
 class ColorFilterNode : public Node {
 public:
-    void setColorMatrix(mat4 matrix) { m_colorMatrix = matrix; }
+    void setColorMatrix(const mat4 &matrix) { m_colorMatrix = matrix; }
     mat4 colorMatrix() const { return m_colorMatrix; }
 
     RENGINE_ALLOCATION_POOL_DECLARATION(ColorFilterNode, rengine_ColorFilterNode);
 
-    ColorFilterNode *create(mat4 matrix) {
+    ColorFilterNode *create(const mat4 &matrix) {
         auto node = create();
         node->setColorMatrix(matrix);
         return node;
