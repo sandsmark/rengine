@@ -76,7 +76,7 @@ public:
 private:
     void renderSingleGlyph(int x, int y,                    // the position, x, y
                        unsigned int *t, int tw, int th,     // the target texture data, 32-bit RGBA
-                       unsigned char *b, int bw, int bh,    // the source glyph bitmap, 8 bit alpha mask
+                       unsigned char *buffer, int bw, int bh,    // the source glyph bitmap, 8 bit alpha mask
                        int cr, int cg, int cb, int ca);     // the glyph color..
 
     GlyphContext *m_context;
@@ -224,7 +224,7 @@ inline void GlyphTextureJob::onExecute()
 
 inline void GlyphTextureJob::renderSingleGlyph(int x, int y,
                                         unsigned int *t, int tw, int th,
-                                        unsigned char *b, int bw, int bh,
+                                        unsigned char *buffer, int bw, int bh,
                                         int cr, int cg, int cb, int ca)
 {
     for (int yy=0; yy<bh; ++yy) {
@@ -236,7 +236,7 @@ inline void GlyphTextureJob::renderSingleGlyph(int x, int y,
         //     continue;
         // else if (yy + y > ctx->buffer->height)
         //     break;
-        unsigned char *src = b + yy * bw;
+        unsigned char *src = buffer + yy * bw;
         unsigned int *dst = t + dy * tw + x;
 
         for (int xx=0; xx<bw; ++xx) {
