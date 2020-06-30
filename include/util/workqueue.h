@@ -28,6 +28,10 @@
 #include <thread>
 #include <mutex>
 #include <condition_variable>
+#include <list>
+#include <algorithm>
+
+#include <cassert>
 
 RENGINE_BEGIN_NAMESPACE
 

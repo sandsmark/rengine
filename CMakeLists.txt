@@ -1,6 +1,10 @@
 cmake_minimum_required(VERSION 2.6)
 project(rengine)
 
+set (CMAKE_CXX_STANDARD 17)
+set(CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
+
 file(MAKE_DIRECTORY lib)
 
 set(CMAKE_CXX_FLAGS "-Wall -std=c++11 -fsanitize=address -fsanitize=undefined")
@@ -97,9 +101,10 @@ else() # (RENGINE_USE_SDL)
 endif()
 
 
-find_package(OpenGL)
-if (OPENGL_FOUND)
-    set(RENGINE_LIBS ${RENGINE_LIBS} ${OPENGL_LIBRARIES})
+find_package(OpenGL COMPONENTS EGL)
+find_package(GLEW REQUIRED)
+if (OpenGL_EGL_FOUND)
+    set(RENGINE_LIBS ${RENGINE_LIBS} OpenGL::EGL GLEW::GLEW)
     add_definitions(-DRENGINE_OPENGL_DESKTOP)
 else()
     message(WARNING, "OpenGL was not found, assuming OpenGL ES 2.0 in default locations...")
