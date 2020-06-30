@@ -25,6 +25,8 @@
 
 #pragma once
 
+#include "common/common.h"
+
 #include <thread>
 #include <mutex>
 #include <condition_variable>

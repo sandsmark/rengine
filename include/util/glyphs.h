@@ -25,6 +25,11 @@
 
 #pragma once
 
+#include "common/common.h"
+#include "common/mathtypes.h"
+#include "common/logging.h"
+#include "util/workqueue.h"
+
 #include "stb_truetype.h"
 
 #include <iostream>

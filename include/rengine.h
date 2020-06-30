@@ -30,10 +30,7 @@
 #include <memory>
 #include <vector>
 
-#define RENGINE_NAMESPACE_PREFIX rengine::
-#define RENGINE_BEGIN_NAMESPACE namespace rengine {
-#define RENGINE_END_NAMESPACE }
-#define RENGINE_USE_NAMESPACE using namespace rengine;
+#include "common/common.h"
 
 // Forward declarations
 RENGINE_BEGIN_NAMESPACE
