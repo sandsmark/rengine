@@ -39,10 +39,11 @@ RENGINE_BEGIN_NAMESPACE
 class GlyphContext
 {
 public:
-    GlyphContext(const std::string &fontFile);
+    explicit GlyphContext(const std::string &fontFile);
+    explicit GlyphContext(const unsigned char *fontData);
     ~GlyphContext();
 
-    bool isValid() const { return m_fontData; }
+    bool isValid() const { return m_fontInfo.numGlyphs > 0; }
 
     const stbtt_fontinfo *fontInfo() const { return &m_fontInfo; }
 
@@ -113,7 +114,15 @@ inline GlyphContext::GlyphContext(const std::string &fontFile)
     if (!stbtt_InitFont(&m_fontInfo, m_fontData, 0)) {
         loge << "Failed to initialize font '" << fontFile << "'" << std::endl;
         free(m_fontData);
-        m_fontData = 0;
+        m_fontData = nullptr;
+        return;
+    }
+}
+
+inline GlyphContext::GlyphContext(const unsigned char *fontData)
+{
+    if (!stbtt_InitFont(&m_fontInfo, fontData, 0)) {
+        loge << "Failed to initialize font from data" << std::endl;
         return;
     }
 }
