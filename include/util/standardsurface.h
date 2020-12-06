@@ -162,6 +162,12 @@ inline void StandardSurface::onEvent(Event *e)
                 continue;
             }
 
+            // We can only deliver events to nodes that are visible,
+            // otherwise we don't know where it is
+            if (!receiver->parent()) {
+                continue;
+            }
+
             bool inv = false;
             mat4 invNodeMatrix = TransformNode::matrixFor(receiver, m_renderer->sceneRoot()).inverted(&inv);
             if (inv)
