@@ -695,6 +695,11 @@ inline void OpenGLRenderer::build(Node *n)
         // broken though..
         if (m_render3d)
             e->z = (m_m3d * vec3((p1 + p2) / 2.0f)).z;
+
+        // Add to the bounding box if we're in inside a layer
+        if (m_layered) {
+            m_layerBoundingBox |= geometry;
+        }
         break;
     }
 
