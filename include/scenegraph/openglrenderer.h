@@ -25,13 +25,23 @@
 
 #pragma once
 
+#include "renderer.h"
+
+#include "common/logging.h"
+
+#include "openglrenderer_shaders.h"
+#include "openglshaderprogram.h"
+#include "opengltexture.h"
+#include "node.h"
+
+#include "windowsystem/surface.h"
+
 #include <stack>
 #include <stdio.h>
 #include <alloca.h>
 #include <iomanip>
 #include <cstring>
-
-#include "openglrenderer_shaders.h"
+#include <vector>
 
 RENGINE_BEGIN_NAMESPACE
 
@@ -39,6 +49,7 @@ class OpenGLRenderer : public Renderer
 {
 public:
 
+    // FIXME: can't inherit from std::
     struct TexturePool : public std::vector<GLuint>
     {
         ~TexturePool()

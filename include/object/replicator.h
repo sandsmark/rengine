@@ -25,6 +25,10 @@
 
 #pragma once
 
+#include "common/common.h"
+
+#include <vector>
+
 RENGINE_BEGIN_NAMESPACE
 
 template <typename T, typename Context>

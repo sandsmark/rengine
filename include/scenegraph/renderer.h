@@ -25,7 +25,14 @@
 
 #pragma once
 
+#include "common/common.h"
+#include "common/mathtypes.h"
+#include "scenegraph/texture.h"
+
 RENGINE_BEGIN_NAMESPACE
+
+class Node;
+class Surface;
 
 #define RENGINE_RENDERER_ALPHA_THRESHOLD 0.001
 

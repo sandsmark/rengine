@@ -26,8 +26,11 @@
 
 #pragma once
 
+#include "common.h"
+
 #include <iostream>
 #include <chrono>
+#include <string>
 
 RENGINE_BEGIN_NAMESPACE
 

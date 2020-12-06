@@ -25,8 +25,11 @@
 
 #pragma once
 
+#include "common/common.h"
+
 #include <assert.h>
 #include <iostream>
+#include <memory>
 
 RENGINE_BEGIN_NAMESPACE
 

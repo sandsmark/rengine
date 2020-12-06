@@ -26,6 +26,8 @@
 
 #pragma once
 
+#include "common/mathtypes.h"
+
 RENGINE_BEGIN_NAMESPACE
 
 struct KalmanFilter2D

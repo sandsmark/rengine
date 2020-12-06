@@ -25,6 +25,10 @@
 
 #pragma once
 
+#include "common/common.h"
+#include "common/logging.h"
+#include "scenegraph/node.h"
+
 #include <limits>
 
 RENGINE_BEGIN_NAMESPACE

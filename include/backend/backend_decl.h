@@ -25,7 +25,12 @@
 
 #pragma once
 
+#include "common/common.h"
+
 RENGINE_BEGIN_NAMESPACE
+
+class Surface;
+class SurfaceBackendImpl;
 
 class Backend
 {

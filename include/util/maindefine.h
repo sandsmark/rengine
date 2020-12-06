@@ -25,6 +25,10 @@
 
 #pragma once
 
+#include "common/common.h"
+
+#include "rengine.h"
+
 #include <memory>
 
 RENGINE_BEGIN_NAMESPACE

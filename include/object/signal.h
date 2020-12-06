@@ -25,11 +25,14 @@
 
 #pragma once
 
+#include "common/common.h"
+
 #include <assert.h>
 #include <vector>
 #include <unordered_set>
 #include <functional>
 #include <algorithm>
+#include <memory>
 
 RENGINE_BEGIN_NAMESPACE
 

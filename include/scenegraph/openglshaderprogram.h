@@ -25,9 +25,15 @@
 
 #pragma once
 
+#include "common/common.h"
+#include "common/logging.h"
+
+#include "opengl.h"
+
 #include <iostream>
 #include <vector>
 #include <cstring>
+#include <cassert>
 
 RENGINE_BEGIN_NAMESPACE
 

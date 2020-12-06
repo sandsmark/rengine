@@ -24,6 +24,10 @@
  */
 #pragma once
 
+#include "animation.h"
+#include "common/colormatrix.h"
+#include "scenegraph/node.h"
+
 RENGINE_BEGIN_NAMESPACE
 
 

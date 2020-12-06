@@ -25,7 +25,14 @@
 
 #pragma once
 
+#include "common/common.h"
+#include "common/mathtypes.h"
+#include "backend/backend_decl.h"
+
 RENGINE_BEGIN_NAMESPACE
+
+class Renderer;
+class Event;
 
 /*!
 

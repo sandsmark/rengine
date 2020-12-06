@@ -25,6 +25,8 @@
 
 #pragma once
 
+#include "common/common.h"
+
 #include <assert.h>
 #include <vector>
 #include <functional>

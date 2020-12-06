@@ -25,6 +25,12 @@
 
 #pragma once
 
+#include "common/common.h"
+#include "common/logging.h"
+#include "backend_decl.h"
+
+#include <cassert>
+
 RENGINE_BEGIN_NAMESPACE
 
 inline Backend::Backend()

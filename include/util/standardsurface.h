@@ -25,6 +25,14 @@
 
 #pragma once
 
+#include "windowsystem/surface.h"
+#include "windowsystem/event.h"
+#include "animationsystem/animation.h"
+#include "scenegraph/renderer.h"
+#include "scenegraph/node.h"
+#include "util/workqueue.h"
+
+#include <memory>
 #include <unordered_set>
 
 RENGINE_BEGIN_NAMESPACE

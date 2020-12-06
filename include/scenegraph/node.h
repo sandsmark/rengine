@@ -25,12 +25,20 @@
 
 #pragma once
 
+#include "common/common.h"
+#include "common/mathtypes.h"
+#include "common/allocationpool.h"
+#include "object/signal.h"
+
 #include <assert.h>
 #include <vector>
 #include <algorithm>
 #include <iostream>
 
 RENGINE_BEGIN_NAMESPACE
+
+class PointerEvent;
+class Texture;
 
 #define RENGINE_NODE_DEFINE_FROM_FUNCTION(Class, Type) \
     static Class *from(Node *node) {                   \

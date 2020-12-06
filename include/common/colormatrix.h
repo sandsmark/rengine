@@ -25,6 +25,9 @@
 
 #pragma once
 
+#include "common/common.h"
+#include "common/mathtypes.h"
+
 #include <cmath>
 
 RENGINE_BEGIN_NAMESPACE

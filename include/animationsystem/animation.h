@@ -23,15 +23,12 @@
     SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-/*!
-
-    This file is fully self-contained and can be deployed in other projects
-    with minimal additional dependencies. Just define RENGINE_BEGIN_NAMESPACE
-    and RENGINE_END_NAMESPACE before including it, and you should be good.
-
- */
-
 #pragma once
+
+#include "object/signal.h"
+
+#include <chrono>
+#include <list>
 
 RENGINE_BEGIN_NAMESPACE
 

@@ -25,7 +25,13 @@
 
 #pragma once
 
+#include "common/common.h"
+#include "common/mathtypes.h"
+#include "opengl.h" // TODO: we just use gluint, remove
+
 RENGINE_BEGIN_NAMESPACE
+
+class Backend;
 
 class Texture {
 public:

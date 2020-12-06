@@ -25,6 +25,10 @@
 
 #pragma once
 
+#include "texture.h"
+
+#include "opengl.h"
+
 RENGINE_BEGIN_NAMESPACE
 
 class OpenGLTexture : public Texture

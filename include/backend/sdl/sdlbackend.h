@@ -24,6 +24,12 @@
     SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
+#include "common/common.h"
+#include "common/logging.h"
+#include "backend/backend_decl.h"
+#include "windowsystem/event.h"
+#include "scenegraph/openglrenderer.h"
+
 #include <SDL.h>
 #include <unordered_map>
 #include <chrono>

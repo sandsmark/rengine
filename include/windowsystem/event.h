@@ -25,6 +25,11 @@
 
 #pragma once
 
+#include "common/common.h"
+#include "common/mathtypes.h"
+
+#include <cassert>
+
 RENGINE_BEGIN_NAMESPACE
 
 class Event

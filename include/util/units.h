@@ -25,6 +25,9 @@
 
 #pragma once
 
+#include "common/common.h"
+#include "windowsystem/surface.h"
+
 RENGINE_BEGIN_NAMESPACE
 
 /*!
