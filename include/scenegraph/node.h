@@ -771,7 +771,7 @@ public:
         in a similar state, especially with regards to array and index buffers
         and attribute registers.
      */
-    virtual void render() = 0;
+    virtual void render(const mat4 &proj) = 0;
 
 
     // Does not allow pool allocation as it is pure virtual..

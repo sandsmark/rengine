@@ -921,7 +921,7 @@ inline void OpenGLRenderer::render(Element *first, Element *last)
             if (rn->width() != 0 && rn->height() != 0) {
                 activateShader(0);
                 glBindBuffer(GL_ARRAY_BUFFER, 0);
-                rn->render();
+                rn->render(m_proj);
                 setDefaultOpenGLState();
             }
         }
