@@ -89,8 +89,8 @@ private:
     std::string m_text;
     vec4 m_color;
     int m_pixelSize;
-    int m_textureWidth = 0;
-    int m_textureHeight = 0;
+    size_t m_textureWidth = 0;
+    size_t m_textureHeight = 0;
     std::shared_ptr<unsigned int> m_textureData;
 };
 
@@ -163,8 +163,8 @@ inline void GlyphTextureJob::onExecute()
 
     float xpos = 0;
 
-    int maxBmWidth = 0;
-    int maxBmHeight = 0;
+    size_t maxBmWidth = 0;
+    size_t maxBmHeight = 0;
 
     for (int i=0; codepoints[i]; ++i) {
         int g = stbtt_FindGlyphIndex(fontInfo, codepoints[i]);
@@ -177,8 +177,8 @@ inline void GlyphTextureJob::onExecute()
         float xShift = xpos - (float) std::floor(xpos);
         int x0, x1, y0, y1;
         stbtt_GetGlyphBitmapBoxSubpixel(fontInfo, g, scale, scale, xShift, 0, &x0, &y0, &x1, &y1);
-        maxBmWidth = std::max(x1 - x0, maxBmWidth);
-        maxBmHeight = std::max(y1 - y0, maxBmHeight);
+        maxBmWidth = std::max<int>(x1 - x0, maxBmWidth);
+        maxBmHeight = std::max<int>(y1 - y0, maxBmHeight);
 
         // std::cout << " - '" << m_text[i] << "': index=" << g << ", advance=" << advance << "/" << xpos << ", lsb=" << leftSideBearing
         //           << ", box=" << x0 << "-" << x1 << ", " << y0 << "-" << y1 << std::endl;
@@ -189,7 +189,9 @@ inline void GlyphTextureJob::onExecute()
         glyphs.push_back(g);
     }
 
+    assert(xpos >= 0);
     m_textureWidth = std::ceil(xpos);
+    assert(ascent >= descent);
     m_textureHeight = std::ceil((ascent - descent) * scale);
 
     // std::cout << " - dimensions texture=" << m_textureWidth << "x" << m_textureHeight
